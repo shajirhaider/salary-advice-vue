@@ -4,9 +4,9 @@ import { url } from "@/utils/urls";
 export const client = {
 
     async onPost(app_url, payload) {
-        let config = {
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+        var config = {
+            responseType: 'arraybuffer' 
         };
-        return await axios.create().post(url.baseUrl + app_url, payload, config);
+        return await axios.create().post(url.baseUrl + app_url,payload,config);
     },
 }

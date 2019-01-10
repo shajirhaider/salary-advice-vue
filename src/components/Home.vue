@@ -2,6 +2,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8 col-12 col-sm-6">
             <div class="panel">
+                <img v-bind:src="src">
                 <div class="form-group row nopadding">
                     <span class="col-3  col-form-label text-left">Month</span>
                     <model-list-select class="form-control-sm col-9" v-model="advice.month" :list="monthList" option-value="month" optionText="month" placeholder="Select Month"/>
@@ -43,7 +44,7 @@
                 </div>
             </div>
             <div class="mt-3 text-right">
-                <button class="btn btn-primary ripple">
+                <button class="btn btn-primary ripple" @click="getAdvice()">
                     Generate Advice
                 </button>
             </div>   
@@ -54,6 +55,9 @@
 <script>
 
 import { ModelListSelect} from 'vue-search-select';
+import {url} from "@/utils/urls";
+import {constant} from "@/utils/constant";
+import {client} from "@/utils/client";
 
 export default {
      components: {
@@ -61,6 +65,7 @@ export default {
     },
     data(){
         return{
+            src:'',
             monthList:[
                 { month:  'Sep18' },
                 { month : 'Oct18' },
@@ -70,13 +75,35 @@ export default {
                 { month : 'Feb19' },
                 { month : 'Mar19' }
             ],
-            advice:{},
+            advice: {
+                "month" : "",
+                "payThrough" : "",
+                "filter" : "None",
+                "wing" : ""
+            },
             wingShow: false,
             wingList:[
                 { wing:  'Acquisition' },
                 { wing : 'Delivery' },
                 { wing : 'Operations' }
             ]
+        }
+
+    },
+    methods:{
+        getAdvice(){
+            console.log(this.advice)
+            let body = this.advice
+            let req = constant.getRequest(url.get_advice,body);
+            client.onPost(url.get_advice, req)
+             .then((response) => {
+                 const file = new Blob( [response.data], {type: 'application/pdf'} );
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                    URL.revokeObjectURL(file)
+            }).catch(error =>{
+                console.log(error)
+            });
         }
 
     }

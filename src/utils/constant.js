@@ -6,9 +6,9 @@ export const constant = {
     },
     getRequest(url, body) {
         var request = {
-            header: {
-                login: "user",
-                requestTime: moment().toISOString()
+            head: {
+                "login": "Admin",
+                "request-time":"yyyy-mm-ddThh:mm:ss"
             },
             body: {},
         };
